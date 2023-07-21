@@ -1,0 +1,28 @@
+version: "3"
+services:
+  db:
+    #  https://hub.docker.com/_/mysql
+    platform: linux/arm64/v8
+    image: mysql
+    restart: always
+    container_name: db
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_DATABASE: 'coffeedb'
+      MYSQL_USER: 'ROOT'
+      MYSQL_PASSWORD: 'PASSWORD'
+      MYSQL_ROOT_PASSWORD: 'PASSWORD'
+    ports:
+      - "3307:3306"
+
+  coffeeservice:
+    #    restart: always
+    container_name: coffeeservice
+    depends_on:
+      - db
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    image: coffeeservice:latest

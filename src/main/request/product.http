@@ -1,0 +1,53 @@
+### Create a product ( Black Coffee | DRINK ) by admin.
+POST http://localhost:8080/api/v1/products/admin/create/
+Content-Type: application/json
+
+{
+  "name": "Black Coffee",
+  "price": 4.0,
+  "type": "DRINK"
+}
+
+
+### Create a product ( Latte | DRINK ) by admin
+POST http://localhost:8080/api/v1/products/admin/create/
+Content-Type: application/json
+
+{
+  "name": "Latte",
+  "price": 5.0,
+  "type": "DRINK"
+}
+
+
+### Get All Products - Drinks / Toppings
+GET localhost:8080/api/v1/products/all/?size=20&page=1
+
+
+### Get a product ( drink or topping ) with given id.
+GET http://localhost:8080/api/v1/products/1/
+
+
+### Update the product by id
+PUT http://localhost:8080/api/v1/products/admin/1/edit/
+Content-Type: application/json
+
+{
+"name": "Double Black Coffee",
+"price": 8,
+"type": "DRINK"
+}
+
+
+### admin access to delete
+DELETE http://localhost:8080/api/v1/products/admin/2/delete/
+
+
+
+
+### report the most used topping
+GET http://localhost:8080/api/v1/products/toppings/most-used
+
+
+
+
