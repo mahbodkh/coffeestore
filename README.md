@@ -50,7 +50,7 @@ Address:
 * _Springboot_. 3.1.1
 * _Maven_.
 * _Swagger_.
-* _Api Test, Service + Unit Test [ { **27 unit test** } ]_
+* _Api Tests + Service Tests [ { **27 unit test** } ]_
 * _Dockerized - Docker + Docker Compose_.
 * _jacoco_.
 * _CheckStyle_.
