@@ -40,7 +40,7 @@ Address:
 | PUT         | /api/v1/products/admin/{id}/edit/        | Edit product by admin         |
 | DELETE      | /api/v1/products/admin/{id}/delete/      | Delete completely by admin    |
 |             |                                          |                               |
-| GET         | /api/v1/orders/finalize/{id}/user/       | Load by user {id}             |
+| POST        | /api/v1/orders/finalize/{id}/user/       | Load by user {id}             |
 |             |                                          |                               |
 | GET         | /api/v1/reports/admin/topping/most-used/ | Report by most used toppings. |
 |             |                                          |                               |
