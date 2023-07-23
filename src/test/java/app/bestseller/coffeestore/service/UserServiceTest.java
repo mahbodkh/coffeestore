@@ -36,7 +36,7 @@ class UserServiceTest extends TestDataInitializer {
 
     @Test
     @Order(1)
-    @DisplayName("testGetUser_whenUserIsPersisted_thenExpectedReturnValidData")
+    @DisplayName("test get user when user is persisted then expected return valid data")
     void testGetUser_whenValidUserId_thenReturn() throws Exception {
         // given
         customer = userRepository.save(getCustomer());
@@ -48,7 +48,7 @@ class UserServiceTest extends TestDataInitializer {
 
     @Test
     @Order(2)
-    @DisplayName("testGetUser_whenUserIsNotPersisted_thenExpectedThrowUserNotFoundException")
+    @DisplayName("test get user when is not persisted then expected throw UserNotFoundException")
     void testGetUser_whenInvalidData_expectedThrowException() throws Exception {
         // given
         final var customer = 1L;

@@ -56,6 +56,7 @@ Address:
 * _jacoco_.
 * _CheckStyle_.
 * _HTTP request all provided { product, order, report }_
+* _Exception Handling according to Springboot 3_
 
 
 

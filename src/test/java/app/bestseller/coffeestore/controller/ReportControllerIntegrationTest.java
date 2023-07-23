@@ -68,7 +68,7 @@ class ReportControllerIntegrationTest extends TestDataInitializer {
 
     @Test
     @Order(1)
-    @DisplayName("testGetTheMostUsedToppingApi_whenValidData_thenExpectedReturnPageableProductResponseDTOs")
+    @DisplayName("Test most used Topping Api then return success.")
     void testGetMostUsedTopping() throws Exception {
         prepareOrders();
         //

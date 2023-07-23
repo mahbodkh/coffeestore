@@ -52,7 +52,7 @@ class ProductServiceTest extends TestDataInitializer {
 
     @Test
     @Order(1)
-    @DisplayName("testCreateProduct_whenValidProductCreated_thenExpectedReturnValidData")
+    @DisplayName("Test create a product with valid data then expected persist successfully.")
     void testCreateProduct() throws Exception {
         // given
         var productDto = buildDtoDrinkBlackCoffee();
@@ -70,7 +70,7 @@ class ProductServiceTest extends TestDataInitializer {
 
     @Test
     @Order(2)
-    @DisplayName("testGetProductById_whenValidProductId_thenReturnValidData")
+    @DisplayName("Test get productById when valid productId then Return successfully")
     void testGetProductById() {
         // given
         var product = productRepository.save(getBlackCoffee());
@@ -86,7 +86,7 @@ class ProductServiceTest extends TestDataInitializer {
 
     @Test
     @Order(3)
-    @DisplayName("testGetProductById_whenInvalidProductId_thenExpectedThrowProductNotFoundException")
+    @DisplayName("test get productById given invalid productId then expected throw ProductNotFoundException")
     void testGetProductById_whenIsNotExistProduct_thenReturnException() {
         // given
         Long nonExistentProductId = 1L;
@@ -98,7 +98,7 @@ class ProductServiceTest extends TestDataInitializer {
 
     @Test
     @Order(4)
-    @DisplayName("testUpdateProduct_whenValidProductDto_thenExpectedUpdateDataPersist")
+    @DisplayName("Test update product given ProductDto then expected update successfully")
     void testUpdateProduct() {
         // given
         var product = productRepository.save(getBlackCoffee());
@@ -121,7 +121,7 @@ class ProductServiceTest extends TestDataInitializer {
 
     @Test
     @Order(5)
-    @DisplayName("testDeleteProduct_whenGivenValidData_thenExpectedDeleteDataHasPersisted")
+    @DisplayName("Test delete product when given valid data then expected delete successfully")
     void testDeleteProduct() {
         // given
         var product = productRepository.save(getBlackCoffee());
@@ -135,7 +135,7 @@ class ProductServiceTest extends TestDataInitializer {
 
     @Test
     @Order(6)
-    @DisplayName("testGetTheMostUsedTopping_whenGivenPreparedOrders_thenExpectedReturnValidToppings")
+    @DisplayName("Test get most used topping then expected return successfully")
     void testGetMostUsedTopping() {
         // given
         prepareOrders();

@@ -52,7 +52,7 @@ class DiscountServiceTest extends TestDataInitializer {
      */
     @Test
     @Order(1)
-    @DisplayName("testDiscount_whenTotalAmountIsLessThanPromotionRules_thenExpectedReturnZeroDiscount")
+    @DisplayName("Test discount service when total amount is less than promotion rules then expected return Zero discount")
     void testDiscount_whenTotalCostDoesNotExceedLimit() {
         // given
         List<Product> products = new ArrayList<>(List.of(blackCoffee, milk));
@@ -70,7 +70,7 @@ class DiscountServiceTest extends TestDataInitializer {
      */
     @Test
     @Order(2)
-    @DisplayName("testDiscount_whenTotalAmountAppliesTwentyFivePercentagePromotionRule_thenExpectedReturnDiscountByTwentyFivePromotion")
+    @DisplayName("Test discount service when total amount applies TwentyFive percentage then expected return discount by TwentyFive promotion rule")
     void testDiscountWhenTotalCostExceedsLimitButNoDrinkLimit() {
         // given
         List<Product> products = new ArrayList<>(List.of(blackCoffee, mocha, chocolateSauce));
@@ -89,7 +89,7 @@ class DiscountServiceTest extends TestDataInitializer {
      */
     @Test
     @Order(3)
-    @DisplayName("testDiscount_whenTotalAmountAppliesAllPromotionRules_thenExpectedReturnLowestToppingAmountDiscount")
+    @DisplayName("Test discount service when total amount applies all promotion rules then expected return lowest amount discount")
     void testDiscount_whenEligibleForBothPromotions_expectedApplyLowestDiscountRate() {
         // given
         List<Product> products = new ArrayList<>(List.of(blackCoffee, mocha, tea, chocolateSauce, milk));
@@ -102,12 +102,12 @@ class DiscountServiceTest extends TestDataInitializer {
     /**
      * black coffee = 4€
      * mocha = 6€
-     * chocolateSauce = 5€
      * tea = 3€
+     * chocolateSauce = 5€
      */
     @Test
     @Order(4)
-    @DisplayName("testDiscount_whenTotalAmountIsLessThanPromotionRules_thenExpectedReturnLowestAmountDiscount")
+    @DisplayName("Test discount service when total amount is less than promotion rules then expected return lowest amount discount")
     void testDiscountWhenDrinkLimitExceeds() {
         // given
         List<Product> products = new ArrayList<>(List.of(blackCoffee, mocha, chocolateSauce, tea));
@@ -123,7 +123,7 @@ class DiscountServiceTest extends TestDataInitializer {
      */
     @Test
     @Order(5)
-    @DisplayName("testDiscount_whenTotalAmountIsLessThanPromotionRules_thenExpectedReturnZeroDiscount")
+    @DisplayName("Test discount service when there is no any products then expected return Zero discount")
     void testDiscountWhenCartIsEmpty() {
         // given
         List<Product> products = new ArrayList<>();
@@ -144,7 +144,7 @@ class DiscountServiceTest extends TestDataInitializer {
      */
     @Test
     @Order(4)
-    @DisplayName("testDiscount_whenTotalAmountIsLessThanPromotionRules_thenExpectedReturnZeroDiscount")
+    @DisplayName("Test discount service when total amount is not meet twelve euros promotion rule then expected return Zero discount")
     void testDiscount_whenTotalCostIsEqualTwelve_expectedReturnZero() {
         // given
         List<Product> products = new ArrayList<>(List.of(blackCoffee, mocha, milk));

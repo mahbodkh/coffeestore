@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Description;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -58,19 +59,19 @@ class ProductControllerIntegrationTest extends TestDataInitializer {
                 .build();
 
         // prepare a customer ( user ) in db
-        customer = userRepository.save(getCustomer());
+        this.customer = userRepository.save(getCustomer());
 
         // prepare some products ( drink / topping ) in db
-        blackCoffee = productRepository.save(getBlackCoffee());
-        mocha = productRepository.save(getMocha());
-        milk = productRepository.save(getMilk());
-        chocolateSauce = productRepository.save(getChocolateSauce());
+        this.blackCoffee = productRepository.save(getBlackCoffee());
+        this.mocha = productRepository.save(getMocha());
+        this.milk = productRepository.save(getMilk());
+        this.chocolateSauce = productRepository.save(getChocolateSauce());
     }
 
 
     @Test
     @Order(1)
-    @DisplayName("testGetProductApi_whenValidData_thenExpectedReturnProductResponseDTO")
+    @DisplayName("Test get product Api then expected return ProductResponseDTO")
     void testGetProduct() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/api/v1/products/" + blackCoffee.getId() + "/")
@@ -86,7 +87,7 @@ class ProductControllerIntegrationTest extends TestDataInitializer {
 
     @Test
     @Order(2)
-    @DisplayName("testGetAllProductsApi_whenValidData_thenExpectedReturnPageableProductResponseDTOs")
+    @DisplayName("Test get all products Api then expected return pageable ProductResponseDTOs")
     void testGetAllProducts() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/api/v1/products/all/")
@@ -126,7 +127,7 @@ class ProductControllerIntegrationTest extends TestDataInitializer {
 
     @Test
     @Order(3)
-    @DisplayName("testCreateProductApi_whenValidData_thenExpectedResponseIsCreated")
+    @DisplayName("Test create product Api then expected response isCreated")
     void testCreateProduct() throws Exception {
         ProductDTO americano = new ProductDTO();
         americano.setType("DRINK");
@@ -144,7 +145,7 @@ class ProductControllerIntegrationTest extends TestDataInitializer {
 
     @Test
     @Order(4)
-    @DisplayName("testUpdateProductApi_whenValidData_thenExpectedReturnIsOk")
+    @DisplayName("Test update product Api then expected return isOk")
     void testUpdateProduct() throws Exception {
 
         ProductDTO blackCoffeeUpdate = new ProductDTO();
@@ -162,7 +163,7 @@ class ProductControllerIntegrationTest extends TestDataInitializer {
 
     @Test
     @Order(5)
-    @DisplayName("testDeleteProductApi_whenValidData_thenExpectedReturnIsOk")
+    @DisplayName("Test delete product Api then expected return isOk")
     void testDeleteProduct() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
                         .delete("/api/v1/products/admin/" + milk.getId() + "/delete/")

@@ -68,18 +68,18 @@ class OrderControllerIntegrationTest extends TestDataInitializer {
                 .build();
 
         // prepare a customer ( user ) in db
-        customer = userRepository.save(getCustomer());
+        this.customer = userRepository.save(getCustomer());
         // prepare some products ( drink / topping ) in db
-        blackCoffee = productRepository.save(getBlackCoffee());
-        mocha = productRepository.save(getMocha());
-        milk = productRepository.save(getMilk());
-        chocolateSauce = productRepository.save(getChocolateSauce());
+        this.blackCoffee = productRepository.save(getBlackCoffee());
+        this.mocha = productRepository.save(getMocha());
+        this.milk = productRepository.save(getMilk());
+        this.chocolateSauce = productRepository.save(getChocolateSauce());
     }
 
 
     @Test
     @Order(1)
-    @DisplayName("testOrderProductApi_whenValidData_thenExpectedReturnIsCreated")
+    @DisplayName("Test order register Api then expected return isCreated")
     void testOrderCreationWithValidInput() throws Exception {
         var orderRequest = getRequestOrderDtos();
         mockMvc.perform(MockMvcRequestBuilders

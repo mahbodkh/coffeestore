@@ -66,7 +66,7 @@ class OrderServiceTest extends TestDataInitializer {
 
     @Test
     @Order(1)
-    @DisplayName("testCreateOrder_whenValidData_thenExpectedPersistAndReturnOrderResponseDTO")
+    @DisplayName("test create order when valid data then expected persist and return OrderResponseDTO")
     void testCreateOrder_whenValidInput_thenReturnOrderResponseDTO() throws Exception {
         // given
         var orderRequest = getRequestOrderDtos();
@@ -87,7 +87,7 @@ class OrderServiceTest extends TestDataInitializer {
 
     @Test
     @Order(2)
-    @DisplayName("testCreateOrder_whenSingleProduct_thenExpectedPersistOrderAndReturnOrderResponseDto")
+    @DisplayName("test create order when single product then expected persist order and return OrderResponseDTO")
     void testCreateOrder_whenSingleProduct_thenReturnResponseDto() {
         // given | prepare order dto
         OrderDTO orderDTO = new OrderDTO();
@@ -109,7 +109,7 @@ class OrderServiceTest extends TestDataInitializer {
 
     @Test
     @Order(3)
-    @DisplayName("testCreateOrder_whenMultipleProductWithSameProductType_thenExpectedReturnValidAmount")
+    @DisplayName("Test create order when multiple same product types then expected return valid total amount")
     void testCreateOrder_whenMultipleProductsOfSameProduct_expectedValidTotal() {
         // given
         var orderDTO = new OrderDTO();
@@ -128,7 +128,7 @@ class OrderServiceTest extends TestDataInitializer {
 
     @Test
     @Order(4)
-    @DisplayName("testCreateOrder_whenMultipleProductsWithDifferentProductTypes_thenExpectedReturnValidAmount")
+    @DisplayName("Test create order when multiple Products with different types then expected return valid total amount")
     void testCreateOrder_whenMultipleProductsOfDifferentTypes_expectedValidTotal() {
         // given
         var orderDTO = new OrderDTO();
@@ -152,7 +152,7 @@ class OrderServiceTest extends TestDataInitializer {
 
     @Test
     @Order(5)
-    @DisplayName("testCreateOrder_whenValidCustomerWithNoProduct_thenExpectedThrowBadRequestException")
+    @DisplayName("Test create order when valid customer with no product then expected throw BadRequestException")
     void testCreateOrder_whenNoProducts_thenThrowBadRequestException() {
         // given
         var orderDTO = new OrderDTO();
