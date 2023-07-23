@@ -32,18 +32,18 @@ Address:
 
 #### Scheme APIs:
 
-| Http Method | Path                                     | Description                   |
-|-------------|------------------------------------------|-------------------------------|
-| GET         | /api/v1/products/{id}/                   | Load the product by user      |
-| GET         | /api/v1/products/all/                    | Load All product by user      |
-| POST        | /api/v1/products/admin/create/           | Create product by admin       |
-| PUT         | /api/v1/products/admin/{id}/edit/        | Edit product by admin         |
-| DELETE      | /api/v1/products/admin/{id}/delete/      | Delete completely by admin    |
-|             |                                          |                               |
-| POST        | /api/v1/orders/finalize/{id}/user/       | Load by user {id}             |
-|             |                                          |                               |
-| GET         | /api/v1/reports/admin/topping/most-used/ | Report by most used toppings. |
-|             |                                          |                               |
+| Http Method | Path                                     | Description                    |
+|-------------|------------------------------------------|--------------------------------|
+| GET         | /api/v1/products/{id}/                   | Load the product by user       |
+| GET         | /api/v1/products/all/                    | Load All product by user       |
+| POST        | /api/v1/products/admin/create/           | Create product by admin        |
+| PUT         | /api/v1/products/admin/{id}/edit/        | Edit product by admin          |
+| DELETE      | /api/v1/products/admin/{id}/delete/      | Delete completely by admin     |
+|             |                                          |                                |
+| POST        | /api/v1/orders/finalize/{id}/user/       | Register an order by user {id} |
+|             |                                          |                                |
+| GET         | /api/v1/reports/admin/topping/most-used/ | Report by most used toppings.  |
+|             |                                          |                                |
 
 ### Features:
 
