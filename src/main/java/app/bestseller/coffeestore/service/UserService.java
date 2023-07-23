@@ -2,7 +2,6 @@ package app.bestseller.coffeestore.service;
 
 
 import app.bestseller.coffeestore.domain.User;
-import app.bestseller.coffeestore.exception.ProductNotFoundException;
 import app.bestseller.coffeestore.exception.UserNotFoundException;
 import app.bestseller.coffeestore.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,17 +12,12 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 
 
-/**
- * Created by Abe with ❤️.
- */
-
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
 
-    @Transactional(readOnly = true)
     public User loadUser(Long userId) {
         log.info(" ==> Fetching user with ID: {}", userId);
         return Optional.of(userRepository.findById(userId))

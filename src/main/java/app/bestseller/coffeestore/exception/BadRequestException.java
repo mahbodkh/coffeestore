@@ -1,20 +1,14 @@
 package app.bestseller.coffeestore.exception;
 
 
-import java.util.Collections;
-import java.util.Map;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
-/**
- * Created by Abe with ❤️.
- */
 
-public class BadRequestException extends ValidationException {
-
-    public BadRequestException(String message, Map<String, String> errors) {
-        super(message, errors);
-    }
+@ResponseStatus(HttpStatus.BAD_REQUEST)
+public class BadRequestException extends RuntimeException {
 
     public BadRequestException(String message) {
-        this(message, Collections.emptyMap());
+        super(message);
     }
 }

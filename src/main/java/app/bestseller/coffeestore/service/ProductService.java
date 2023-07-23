@@ -12,13 +12,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.ObjectUtils;
 
 import java.util.Optional;
-
-/**
- * Created by Abe with ❤️.
- */
 
 @Slf4j
 @Service
@@ -29,14 +24,9 @@ public class ProductService {
     private final ReportRepository reportRepository;
     private final ProductMapper productMapper;
 
-    @Transactional
     public Product createProduct(ProductDTO request) {
         log.info(" ==> Request the productDto prepare: ({})", request);
-        final var product = Product.builder()
-                .name(request.getName())
-                .price(request.getPrice())
-                .type(ObjectUtils.isEmpty(request.getType()) ? null : Product.Type.valueOf(request.getType()))
-                .build();
+        final var product = productMapper.toEntity(request);
         final var save = productRepository.save(product);
         log.info(" <== The product has been persisted: ({})", save);
         return save;
@@ -49,7 +39,6 @@ public class ProductService {
      * @param productId is the id of product and should be Long.
      * @return Product Domain Model.
      */
-    @Transactional(readOnly = true)
     public Product getProductById(Long productId) {
         log.info(" ==> Fetching product with ID: {}", productId);
         return Optional.of(productRepository.findById(productId))
@@ -62,7 +51,6 @@ public class ProductService {
     }
 
 
-    @Transactional(readOnly = true)
     public Page<Product> getProducts(Pageable pageable) {
         return productRepository.findAll(pageable);
     }
@@ -74,7 +62,6 @@ public class ProductService {
      * @param request   the product dto comes from the API request.
      * @return an Optional Product.
      */
-    @Transactional
     public Optional<Product> updateProduct(Long productId, ProductDTO request) {
         return Optional.of(productRepository.findById(productId)).filter(Optional::isPresent).map(Optional::get).map(product -> {
             var updatedProduct = productMapper.copyProductDtoToEntity(request, product);
@@ -90,7 +77,6 @@ public class ProductService {
      *
      * @param productId is the id of product.
      */
-    @Transactional
     public void deleteProduct(Long productId) {
         productRepository.findById(productId).ifPresent(entity -> {
             productRepository.delete(entity);

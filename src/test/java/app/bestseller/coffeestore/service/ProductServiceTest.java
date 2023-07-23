@@ -1,13 +1,15 @@
 package app.bestseller.coffeestore.service;
 
 import app.bestseller.coffeestore.TestDataInitializer;
-import app.bestseller.coffeestore.domain.Order;
 import app.bestseller.coffeestore.domain.Product;
+import app.bestseller.coffeestore.domain.ProductType;
 import app.bestseller.coffeestore.exception.ProductNotFoundException;
 import app.bestseller.coffeestore.repository.OrderRepository;
 import app.bestseller.coffeestore.repository.ProductRepository;
 import app.bestseller.coffeestore.service.dto.ProductDTO;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,9 +26,6 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-/**
- * Created by Abe with ❤️.
- */
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -47,10 +46,13 @@ class ProductServiceTest extends TestDataInitializer {
     public void setup() throws Exception {
         super.setUp();
 
+        // prepare a product ( drink )
         blackCoffee = getBlackCoffee();
     }
 
     @Test
+    @Order(1)
+    @DisplayName("testCreateProduct_whenValidProductCreated_thenExpectedReturnValidData")
     void testCreateProduct() throws Exception {
         // given
         var productDto = buildDtoDrinkBlackCoffee();
@@ -62,11 +64,13 @@ class ProductServiceTest extends TestDataInitializer {
         var productById = productRepository.findById(createdProduct.getId()).orElseThrow();
         assertThat(createdProduct.getId()).isEqualTo(productById.getId());
         assertThat(createdProduct.getName()).isEqualTo(productById.getName());
-        assertThat(createdProduct.getType()).isEqualTo(Product.Type.DRINK);
+        assertThat(createdProduct.getType()).isEqualTo(ProductType.DRINK);
         assertThat(createdProduct.getPrice()).isEqualTo(productById.getPrice());
     }
 
     @Test
+    @Order(2)
+    @DisplayName("testGetProductById_whenValidProductId_thenReturnValidData")
     void testGetProductById() {
         // given
         var product = productRepository.save(getBlackCoffee());
@@ -76,11 +80,13 @@ class ProductServiceTest extends TestDataInitializer {
         assertThat(foundProduct).isNotNull();
         assertThat(foundProduct.getId()).isEqualTo(product.getId());
         assertThat(foundProduct.getName()).isEqualTo(product.getName());
-        assertThat(foundProduct.getType()).isEqualTo(Product.Type.DRINK);
+        assertThat(foundProduct.getType()).isEqualTo(ProductType.DRINK);
         assertThat(foundProduct.getPrice()).isEqualTo(product.getPrice());
     }
 
     @Test
+    @Order(3)
+    @DisplayName("testGetProductById_whenInvalidProductId_thenExpectedThrowProductNotFoundException")
     void testGetProductById_whenIsNotExistProduct_thenReturnException() {
         // given
         Long nonExistentProductId = 1L;
@@ -91,6 +97,8 @@ class ProductServiceTest extends TestDataInitializer {
     }
 
     @Test
+    @Order(4)
+    @DisplayName("testUpdateProduct_whenValidProductDto_thenExpectedUpdateDataPersist")
     void testUpdateProduct() {
         // given
         var product = productRepository.save(getBlackCoffee());
@@ -108,10 +116,12 @@ class ProductServiceTest extends TestDataInitializer {
         assertThat(updatedProduct.get().getId()).isEqualTo(product.getId());
         assertThat(updatedProduct.get().getName()).isEqualTo("Updated Product");
         assertThat(updatedProduct.get().getPrice()).isEqualTo(15.0);
-        assertThat(updatedProduct.get().getType()).isEqualTo(Product.Type.TOPPING);
+        assertThat(updatedProduct.get().getType()).isEqualTo(ProductType.TOPPING);
     }
 
     @Test
+    @Order(5)
+    @DisplayName("testDeleteProduct_whenGivenValidData_thenExpectedDeleteDataHasPersisted")
     void testDeleteProduct() {
         // given
         var product = productRepository.save(getBlackCoffee());
@@ -121,7 +131,11 @@ class ProductServiceTest extends TestDataInitializer {
         assertThat(productRepository.findById(product.getId())).isEmpty();
     }
 
+
+
     @Test
+    @Order(6)
+    @DisplayName("testGetTheMostUsedTopping_whenGivenPreparedOrders_thenExpectedReturnValidToppings")
     void testGetMostUsedTopping() {
         // given
         prepareOrders();
@@ -159,11 +173,11 @@ class ProductServiceTest extends TestDataInitializer {
         var hazelnutSyrup = productRepository.save(getHazelnutSyrup());
         var lemon = productRepository.save(getLemon());
 
-        orderRepository.save(Order.builder().products(new ArrayList<>(List.of(milk, chocolateSauce))).build());
-        orderRepository.save(Order.builder().products(new ArrayList<>(List.of(milk, chocolateSauce, hazelnutSyrup))).build());
-        orderRepository.save(Order.builder().products(new ArrayList<>(List.of(milk, hazelnutSyrup, lemon))).build());
-        orderRepository.save(Order.builder().products(new ArrayList<>(List.of(milk, chocolateSauce, hazelnutSyrup, lemon))).build());
-        orderRepository.save(Order.builder().products(new ArrayList<>(List.of(milk, chocolateSauce))).build());
+        orderRepository.save(app.bestseller.coffeestore.domain.Order.builder().products(new ArrayList<>(List.of(milk, chocolateSauce))).build());
+        orderRepository.save(app.bestseller.coffeestore.domain.Order.builder().products(new ArrayList<>(List.of(milk, chocolateSauce, hazelnutSyrup))).build());
+        orderRepository.save(app.bestseller.coffeestore.domain.Order.builder().products(new ArrayList<>(List.of(milk, hazelnutSyrup, lemon))).build());
+        orderRepository.save(app.bestseller.coffeestore.domain.Order.builder().products(new ArrayList<>(List.of(milk, chocolateSauce, hazelnutSyrup, lemon))).build());
+        orderRepository.save(app.bestseller.coffeestore.domain.Order.builder().products(new ArrayList<>(List.of(milk, chocolateSauce))).build());
     }
 
 

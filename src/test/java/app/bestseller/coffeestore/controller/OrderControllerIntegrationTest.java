@@ -2,6 +2,7 @@ package app.bestseller.coffeestore.controller;
 
 import app.bestseller.coffeestore.TestDataInitializer;
 import app.bestseller.coffeestore.domain.Product;
+import app.bestseller.coffeestore.domain.ProductType;
 import app.bestseller.coffeestore.domain.User;
 import app.bestseller.coffeestore.repository.OrderRepository;
 import app.bestseller.coffeestore.repository.ProductRepository;
@@ -9,6 +10,8 @@ import app.bestseller.coffeestore.repository.UserRepository;
 import app.bestseller.coffeestore.service.dto.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -29,14 +32,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
-/**
- * Created by Abe with ❤️.
- */
 
 @SpringBootTest
 @ActiveProfiles("test")
 @Transactional
-class OrderControllerTest extends TestDataInitializer {
+class OrderControllerIntegrationTest extends TestDataInitializer {
     MockMvc mockMvc;
     @Autowired
     WebApplicationContext webApplicationContext;
@@ -52,11 +52,11 @@ class OrderControllerTest extends TestDataInitializer {
     @Autowired
     ToDoubleFunction<List<Product>> discountService;
 
-    User customer;
-    Product blackCoffee;
-    Product mocha;
-    Product milk;
-    Product chocolateSauce;
+    private User customer;
+    private Product blackCoffee;
+    private Product mocha;
+    private Product milk;
+    private Product chocolateSauce;
 
 
     @BeforeEach
@@ -67,7 +67,9 @@ class OrderControllerTest extends TestDataInitializer {
                 .alwaysDo(print())
                 .build();
 
+        // prepare a customer ( user ) in db
         customer = userRepository.save(getCustomer());
+        // prepare some products ( drink / topping ) in db
         blackCoffee = productRepository.save(getBlackCoffee());
         mocha = productRepository.save(getMocha());
         milk = productRepository.save(getMilk());
@@ -76,6 +78,8 @@ class OrderControllerTest extends TestDataInitializer {
 
 
     @Test
+    @Order(1)
+    @DisplayName("testOrderProductApi_whenValidData_thenExpectedReturnIsCreated")
     void testOrderCreationWithValidInput() throws Exception {
         var orderRequest = getRequestOrderDtos();
         mockMvc.perform(MockMvcRequestBuilders
@@ -91,34 +95,36 @@ class OrderControllerTest extends TestDataInitializer {
         assertThat(orders).hasSize(1);
         var drinks = orders.stream()
                 .flatMap(order -> order.getProducts().stream()
-                        .filter(product -> product.getType().equals(Product.Type.DRINK))).toList();
+                        .filter(product -> product.getType().equals(ProductType.DRINK))).toList();
         assertThat(drinks).hasSize(2);
         var toppings = orders.stream()
                 .flatMap(order -> order.getProducts().stream()
-                        .filter(product -> product.getType().equals(Product.Type.TOPPING))).toList();
+                        .filter(product -> product.getType().equals(ProductType.TOPPING))).toList();
         assertThat(toppings).hasSize(2);
     }
 
 
+    /**
+     * prepare an OrderDto with a couple of drinks / toppings
+     *
+     * @return a list of OrderDTO.
+     */
     private List<OrderDTO> getRequestOrderDtos() {
         OrderDTO firstOrderDto = new OrderDTO();
 
-        ProductOrderDTO blackCoffeeDto = new ProductOrderDTO();
-        blackCoffeeDto.setId(this.blackCoffee.getId());
+        ProductOrderDTO blackCoffeeDto = new ProductOrderDTO(this.blackCoffee.getId());
+        ProductOrderDTO milkDto = new ProductOrderDTO(this.milk.getId());
 
-        ProductOrderDTO milkDto = new ProductOrderDTO();
-        milkDto.setId(this.milk.getId());
         firstOrderDto.setProducts(new ArrayList<>(List.of(blackCoffeeDto, milkDto)));
         //
         OrderDTO secondOrderDto = new OrderDTO();
-        ProductOrderDTO mochaDto = new ProductOrderDTO();
-        mochaDto.setId(this.mocha.getId());
 
-        ProductOrderDTO chocolateSauceDto = new ProductOrderDTO();
-        chocolateSauceDto.setId(this.chocolateSauce.getId());
+        ProductOrderDTO mochaDto = new ProductOrderDTO(this.mocha.getId());
+        ProductOrderDTO chocolateSauceDto = new ProductOrderDTO(this.chocolateSauce.getId());
+
         secondOrderDto.setProducts(new ArrayList<>(List.of(mochaDto, chocolateSauceDto)));
 
-        return new ArrayList<>(new ArrayList<>(List.of(firstOrderDto, secondOrderDto)));
+        return new ArrayList<>(List.of(firstOrderDto, secondOrderDto));
     }
 
 

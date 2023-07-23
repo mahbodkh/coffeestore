@@ -11,9 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-/**
- * Created by Abe with ❤️.
- */
 
 @Slf4j
 @RestController

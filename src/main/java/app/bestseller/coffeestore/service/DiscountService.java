@@ -1,22 +1,24 @@
 package app.bestseller.coffeestore.service;
 
 import app.bestseller.coffeestore.domain.Product;
+import app.bestseller.coffeestore.domain.ProductType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.function.ToDoubleFunction;
 
-import static app.bestseller.coffeestore.config.Constants.*;
-
-/**
- * Created by Abe with ❤️.
- */
-
 
 @Slf4j
 @Service
 public class DiscountService implements ToDoubleFunction<List<Product>> {
+
+    private static final double RATE_PERCENTAGE = 0.25;
+    private static final int AMOUNT_LIMIT = 12;
+    private static final int DRINK_LIMIT = 3;
+    private static final double ZERO_VALUE = 0;
+    private static final double DEFAULT_VALUE = 0;
+
 
     /**
      * The main discount logic.
@@ -31,18 +33,18 @@ public class DiscountService implements ToDoubleFunction<List<Product>> {
         final var twentyFivePromoteRate = calculateDiscountByPromotionByTwentyFivePercentage(totalAmount);
         final var amountLowestProductRate = calculateDiscountByLowestAmountProduct(orders);
 
-        if (twentyFivePromoteRate == 0 && amountLowestProductRate == 0) {
+        if (twentyFivePromoteRate == ZERO_VALUE && amountLowestProductRate == ZERO_VALUE) {
             log.info("Discount is not available.");
-            return 0.0;
+            return DEFAULT_VALUE;
         }
-        if (totalAmount > DISCOUNT_AMOUNT_LIMIT && drinkSize >= DISCOUNT_DRINK_LIMIT) {
+        if (totalAmount > AMOUNT_LIMIT && drinkSize >= DRINK_LIMIT) {
             return Math.min(twentyFivePromoteRate, amountLowestProductRate);
-        } else if (totalAmount > DISCOUNT_AMOUNT_LIMIT) {
+        } else if (totalAmount > AMOUNT_LIMIT) {
             return twentyFivePromoteRate;
-        } else if (drinkSize >= DISCOUNT_DRINK_LIMIT) {
+        } else if (drinkSize >= DRINK_LIMIT) {
             return amountLowestProductRate;
         } else
-            return 0.0;
+            return DEFAULT_VALUE;
     }
 
     /**
@@ -53,7 +55,7 @@ public class DiscountService implements ToDoubleFunction<List<Product>> {
      */
     private int getTotalDrinkSize(List<Product> products) {
         return products.stream()
-                .filter(product -> Product.Type.DRINK.equals(product.getType())).toList().size();
+                .filter(product -> ProductType.DRINK.equals(product.getType())).toList().size();
     }
 
 
@@ -64,7 +66,7 @@ public class DiscountService implements ToDoubleFunction<List<Product>> {
      * @return the discount of the customer according to the TwentyFive percentage rule.
      */
     private double calculateDiscountByPromotionByTwentyFivePercentage(Double total) {
-        double twentyFivePromoteRate = total * DISCOUNT_RATE_PERCENTAGE;
+        double twentyFivePromoteRate = total * RATE_PERCENTAGE;
         log.info("Discount promotion calculated by twenty-five percentage and applied by: {} rate. ", twentyFivePromoteRate);
         return twentyFivePromoteRate;
     }

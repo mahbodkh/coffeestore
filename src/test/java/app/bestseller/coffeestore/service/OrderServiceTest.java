@@ -10,6 +10,8 @@ import app.bestseller.coffeestore.repository.OrderRepository;
 import app.bestseller.coffeestore.repository.ProductRepository;
 import app.bestseller.coffeestore.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -23,11 +25,6 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-
-
-/**
- * Created by Abe with ❤️.
- */
 
 
 @SpringBootTest
@@ -57,7 +54,10 @@ class OrderServiceTest extends TestDataInitializer {
     public void setup() throws Exception {
         super.setUp();
 
+        // prepare a customer ( user ) in db
         customer = userRepository.save(getCustomer());
+
+        // prepare some products ( drink / topping ) in db
         blackCoffee = productRepository.save(getBlackCoffee());
         mocha = productRepository.save(getMocha());
         milk = productRepository.save(getMilk());
@@ -65,6 +65,8 @@ class OrderServiceTest extends TestDataInitializer {
     }
 
     @Test
+    @Order(1)
+    @DisplayName("testCreateOrder_whenValidData_thenExpectedPersistAndReturnOrderResponseDTO")
     void testCreateOrder_whenValidInput_thenReturnOrderResponseDTO() throws Exception {
         // given
         var orderRequest = getRequestOrderDtos();
@@ -73,15 +75,23 @@ class OrderServiceTest extends TestDataInitializer {
         var saved = orderRepository.findByUserId(customer.getId()).orElseThrow();
         // assert
         assertThat(saved.getUser().getId()).isEqualTo(order.getUser());
+        assertThat(saved.getTotal()).isEqualTo(order.getTotal());
+        assertThat(saved.getDiscount()).isEqualTo(order.getDiscount());
+        assertThat(saved.getFinalPrice()).isEqualTo(order.getFinalPrice());
+        assertThat(saved.getProducts().get(0).getId()).isEqualTo(this.blackCoffee.getId());
+        assertThat(saved.getProducts().get(1).getId()).isEqualTo(this.milk.getId());
+        assertThat(saved.getProducts().get(2).getId()).isEqualTo(this.mocha.getId());
+        assertThat(saved.getProducts().get(3).getId()).isEqualTo(this.chocolateSauce.getId());
     }
 
 
     @Test
+    @Order(2)
+    @DisplayName("testCreateOrder_whenSingleProduct_thenExpectedPersistOrderAndReturnOrderResponseDto")
     void testCreateOrder_whenSingleProduct_thenReturnResponseDto() {
-        // given
+        // given | prepare order dto
         OrderDTO orderDTO = new OrderDTO();
-        ProductOrderDTO productOrderDTO = new ProductOrderDTO();
-        productOrderDTO.setId(blackCoffee.getId());
+        ProductOrderDTO productOrderDTO = new ProductOrderDTO(this.blackCoffee.getId());
         orderDTO.setProducts(Collections.singletonList(productOrderDTO));
         // when
         var orderResponseDTO = orderService.createOrder(customer.getId(), Collections.singletonList(orderDTO));
@@ -98,6 +108,8 @@ class OrderServiceTest extends TestDataInitializer {
 
 
     @Test
+    @Order(3)
+    @DisplayName("testCreateOrder_whenMultipleProductWithSameProductType_thenExpectedReturnValidAmount")
     void testCreateOrder_whenMultipleProductsOfSameProduct_expectedValidTotal() {
         // given
         var orderDTO = new OrderDTO();
@@ -115,6 +127,8 @@ class OrderServiceTest extends TestDataInitializer {
     }
 
     @Test
+    @Order(4)
+    @DisplayName("testCreateOrder_whenMultipleProductsWithDifferentProductTypes_thenExpectedReturnValidAmount")
     void testCreateOrder_whenMultipleProductsOfDifferentTypes_expectedValidTotal() {
         // given
         var orderDTO = new OrderDTO();
@@ -127,9 +141,9 @@ class OrderServiceTest extends TestDataInitializer {
         orderDTO.setProducts(productOrderDTOS);
 
         // when
-        var orderResponseDTO = orderService.createOrder(customer.getId(), Collections.singletonList(orderDTO));
+        final var orderResponseDTO = orderService.createOrder(customer.getId(), Collections.singletonList(orderDTO));
         // then
-        final double expectedTotal = productOrderDTOS.stream()
+        final var expectedTotal = productOrderDTOS.stream()
                 .mapToDouble(dto -> productRepository.findById(dto.getId()).orElseThrow().getPrice())
                 .sum();
         assertThat(orderResponseDTO.getTotal()).isEqualTo(expectedTotal);
@@ -137,37 +151,43 @@ class OrderServiceTest extends TestDataInitializer {
 
 
     @Test
+    @Order(5)
+    @DisplayName("testCreateOrder_whenValidCustomerWithNoProduct_thenExpectedThrowBadRequestException")
     void testCreateOrder_whenNoProducts_thenThrowBadRequestException() {
         // given
         var orderDTO = new OrderDTO();
         orderDTO.setProducts(Collections.emptyList());
+
+        final var customerId = customer.getId();
+        final var emptyOrderDtos = Collections.singletonList(orderDTO);
         // then
         assertThrows(
                 BadRequestException.class,
-                () -> orderService.createOrder(customer.getId(), Collections.singletonList(orderDTO)),
+                () -> orderService.createOrder(customerId, emptyOrderDtos),
                 "There is no any order to persist."
         );
     }
 
 
+    /**
+     * prepare an OrderDto with a couple of drinks / toppings
+     *
+     * @return a list of OrderDTO.
+     */
     private List<OrderDTO> getRequestOrderDtos() {
         OrderDTO firstOrderDto = new OrderDTO();
 
-        ProductOrderDTO blackCoffeeDto = new ProductOrderDTO();
-        blackCoffeeDto.setId(this.blackCoffee.getId());
+        ProductOrderDTO blackCoffeeDto = new ProductOrderDTO(this.blackCoffee.getId());
 
-        ProductOrderDTO milkDto = new ProductOrderDTO();
-        milkDto.setId(this.milk.getId());
+        ProductOrderDTO milkDto = new ProductOrderDTO(this.milk.getId());
         firstOrderDto.setProducts(new ArrayList<>(List.of(blackCoffeeDto, milkDto)));
         //
         OrderDTO secondOrderDto = new OrderDTO();
-        ProductOrderDTO mochaDto = new ProductOrderDTO();
-        mochaDto.setId(this.mocha.getId());
+        ProductOrderDTO mochaDto = new ProductOrderDTO(this.mocha.getId());
 
-        ProductOrderDTO chocolateSauceDto = new ProductOrderDTO();
-        chocolateSauceDto.setId(this.chocolateSauce.getId());
+        ProductOrderDTO chocolateSauceDto = new ProductOrderDTO(this.chocolateSauce.getId());
         secondOrderDto.setProducts(new ArrayList<>(List.of(mochaDto, chocolateSauceDto)));
 
-        return new ArrayList<>(new ArrayList<>(List.of(firstOrderDto, secondOrderDto)));
+        return new ArrayList<>(List.of(firstOrderDto, secondOrderDto));
     }
 }

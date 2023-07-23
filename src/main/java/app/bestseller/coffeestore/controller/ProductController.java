@@ -1,6 +1,6 @@
 package app.bestseller.coffeestore.controller;
 
-import app.bestseller.coffeestore.controller.validator.PaginationValidator;
+import app.bestseller.coffeestore.controller.validator.PaginationParams;
 import app.bestseller.coffeestore.exception.BadRequestException;
 import app.bestseller.coffeestore.service.ProductService;
 import app.bestseller.coffeestore.service.dto.ProductResponseDTO;
@@ -10,13 +10,10 @@ import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-/**
- * Created by Abe with ❤️.
- */
 
 
 @RestController
@@ -40,10 +37,9 @@ public class ProductController {
     @Operation(summary = "Get all products.")
     @GetMapping("/all/")
     public ResponseEntity<Page<ProductResponseDTO>> getAllProducts(
-            @RequestParam(value = "page", defaultValue = "1") int page,
-            @RequestParam(value = "size", defaultValue = "10") int size
+            @Valid PaginationParams params
     ) throws BadRequestException {
-        var products = productService.getProducts(PaginationValidator.validatePaginationOrThrow(page, size));
+        var products = productService.getProducts(PageRequest.of(params.getPage(), params.getSize()));
         return ResponseEntity.ok(productMapper.toPage(products));
     }
 

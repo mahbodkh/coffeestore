@@ -6,16 +6,15 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import jakarta.persistence.*;
+
+import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-/**
- * Created by Abe with ❤️.
- */
 
-
-@Data
+@Getter
+@Setter
+@ToString
 @Table(name = "bs_order")
 @NoArgsConstructor
 @AllArgsConstructor
@@ -43,8 +42,8 @@ public class Order {
     private User user;
     @Column(name = "created")
     @CreationTimestamp
-    private Date created;
+    private Instant created;
     @Column(name = "changed")
     @UpdateTimestamp
-    private Date changed;
+    private Instant changed;
 }

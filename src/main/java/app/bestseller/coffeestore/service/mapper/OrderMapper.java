@@ -11,9 +11,6 @@ import java.util.Date;
 import java.util.List;
 
 
-/**
- * Created by Abe with ❤️.
- */
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.ERROR)
 public interface OrderMapper {

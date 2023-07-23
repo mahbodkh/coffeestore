@@ -1,13 +1,10 @@
 package app.bestseller.coffeestore;
 
 import app.bestseller.coffeestore.domain.Product;
+import app.bestseller.coffeestore.domain.ProductType;
 import app.bestseller.coffeestore.domain.User;
 import lombok.Getter;
 import org.junit.jupiter.api.TestInstance;
-
-/*
-  Created by Abe with ❤️.
- */
 
 @Getter
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -30,7 +27,7 @@ public abstract class TestDataInitializer {
     // ==============================================
     Product buildDrinkBlackCoffee() {
         var product = new Product();
-        product.setType(Product.Type.DRINK);
+        product.setType(ProductType.DRINK);
         product.setPrice(4.0);
         product.setName("Black Coffee");
         return product;
@@ -38,7 +35,7 @@ public abstract class TestDataInitializer {
 
     Product buildDrinkLatte() {
         var product = new Product();
-        product.setType(Product.Type.DRINK);
+        product.setType(ProductType.DRINK);
         product.setPrice(5.0);
         product.setName("Latte");
         return product;
@@ -46,7 +43,7 @@ public abstract class TestDataInitializer {
 
     Product buildDrinkMocha() {
         var product = new Product();
-        product.setType(Product.Type.DRINK);
+        product.setType(ProductType.DRINK);
         product.setPrice(6.0);
         product.setName("Mocha");
         return product;
@@ -54,7 +51,7 @@ public abstract class TestDataInitializer {
 
     Product buildDrinkTea() {
         var product = new Product();
-        product.setType(Product.Type.DRINK);
+        product.setType(ProductType.DRINK);
         product.setPrice(3.0);
         product.setName("Tea");
         return product;
@@ -65,7 +62,7 @@ public abstract class TestDataInitializer {
     // ==============================================
     Product buildToppingMilk() {
         var product = new Product();
-        product.setType(Product.Type.TOPPING);
+        product.setType(ProductType.TOPPING);
         product.setPrice(2.0);
         product.setName("Milk");
         return product;
@@ -73,7 +70,7 @@ public abstract class TestDataInitializer {
 
     Product buildToppingHazelnutSyrup() {
         var product = new Product();
-        product.setType(Product.Type.TOPPING);
+        product.setType(ProductType.TOPPING);
         product.setPrice(3.0);
         product.setName("Hazelnut Syrup");
         return product;
@@ -81,7 +78,7 @@ public abstract class TestDataInitializer {
 
     Product buildToppingChocolateSauce() {
         var product = new Product();
-        product.setType(Product.Type.TOPPING);
+        product.setType(ProductType.TOPPING);
         product.setPrice(5.0);
         product.setName("Chocolate Sauce");
         return product;
@@ -89,7 +86,7 @@ public abstract class TestDataInitializer {
 
     Product buildToppingLemon() {
         var product = new Product();
-        product.setType(Product.Type.TOPPING);
+        product.setType(ProductType.TOPPING);
         product.setPrice(2.0);
         product.setName("Lemon");
         return product;

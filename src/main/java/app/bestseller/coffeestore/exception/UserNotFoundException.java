@@ -1,10 +1,11 @@
 package app.bestseller.coffeestore.exception;
 
-/**
- * Created by Abe with ❤️.
- */
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
-public class UserNotFoundException extends BadRequestException {
+
+@ResponseStatus(HttpStatus.BAD_REQUEST)
+public class UserNotFoundException extends RuntimeException {
 
     public UserNotFoundException(String message) {
         super(message);

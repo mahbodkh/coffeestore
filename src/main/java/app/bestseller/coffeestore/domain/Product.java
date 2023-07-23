@@ -5,24 +5,18 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.util.Date;
+import java.time.Instant;
 
-/**
- * Created by Abe with ❤️.
- */
 
-@Data
+@Getter
+@Setter
+@ToString
 @Table(name = "bs_product")
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Entity
 public class Product {
-
-    public enum Type {
-        DRINK,
-        TOPPING
-    }
 
     @Id
     @GeneratedValue
@@ -34,11 +28,11 @@ public class Product {
     private Double price = 0.0;
     @Column(name = "type")
     @Enumerated(EnumType.STRING)
-    private Type type;
+    private ProductType type;
     @Column(name = "created")
     @CreationTimestamp
-    private Date created;
+    private Instant created;
     @Column(name = "changed")
     @UpdateTimestamp
-    private Date changed;
+    private Instant changed;
 }

@@ -8,6 +8,8 @@ import app.bestseller.coffeestore.repository.UserRepository;
 import app.bestseller.coffeestore.service.dto.ProductDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,15 +26,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
-/**
- * Created by Abe with ❤️.
- */
-
 
 @SpringBootTest
 @ActiveProfiles("test")
 @Transactional
-class ProductControllerTest extends TestDataInitializer {
+class ProductControllerIntegrationTest extends TestDataInitializer {
     MockMvc mockMvc;
     @Autowired
     WebApplicationContext webApplicationContext;
@@ -45,11 +43,11 @@ class ProductControllerTest extends TestDataInitializer {
     UserRepository userRepository;
 
 
-    User customer;
-    Product blackCoffee;
-    Product mocha;
-    Product milk;
-    Product chocolateSauce;
+    private User customer;
+    private Product blackCoffee;
+    private Product mocha;
+    private Product milk;
+    private Product chocolateSauce;
 
     @BeforeEach
     public void setUp() throws Exception {
@@ -59,7 +57,10 @@ class ProductControllerTest extends TestDataInitializer {
                 .alwaysDo(print())
                 .build();
 
+        // prepare a customer ( user ) in db
         customer = userRepository.save(getCustomer());
+
+        // prepare some products ( drink / topping ) in db
         blackCoffee = productRepository.save(getBlackCoffee());
         mocha = productRepository.save(getMocha());
         milk = productRepository.save(getMilk());
@@ -68,6 +69,8 @@ class ProductControllerTest extends TestDataInitializer {
 
 
     @Test
+    @Order(1)
+    @DisplayName("testGetProductApi_whenValidData_thenExpectedReturnProductResponseDTO")
     void testGetProduct() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/api/v1/products/" + blackCoffee.getId() + "/")
@@ -82,19 +85,22 @@ class ProductControllerTest extends TestDataInitializer {
     }
 
     @Test
+    @Order(2)
+    @DisplayName("testGetAllProductsApi_whenValidData_thenExpectedReturnPageableProductResponseDTOs")
     void testGetAllProducts() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/api/v1/products/all/")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .param("size", "20")
-                        .param("page", "1")
+                        .param("size", "10")
+                        .param("page", "0")
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
 
-                .andExpect(MockMvcResultMatchers.jsonPath("$.size").value(20))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.size").value(10))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.content").isArray())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.numberOfElements").isNumber())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.numberOfElements").value(4))
 
                 .andExpect(MockMvcResultMatchers.jsonPath("$.content.[0].id").value(blackCoffee.getId()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.content.[0].name").value(blackCoffee.getName()))
@@ -104,12 +110,24 @@ class ProductControllerTest extends TestDataInitializer {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.content.[1].id").value(mocha.getId()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.content.[1].name").value(mocha.getName()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.content.[1].price").value(mocha.getPrice()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.content.[1].type").value(mocha.getType().name()));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.content.[1].type").value(mocha.getType().name()))
+
+                .andExpect(MockMvcResultMatchers.jsonPath("$.content.[2].id").value(milk.getId()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.content.[2].name").value(milk.getName()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.content.[2].price").value(milk.getPrice()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.content.[2].type").value(milk.getType().name()))
+
+                .andExpect(MockMvcResultMatchers.jsonPath("$.content.[3].id").value(chocolateSauce.getId()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.content.[3].name").value(chocolateSauce.getName()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.content.[3].price").value(chocolateSauce.getPrice()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.content.[3].type").value(chocolateSauce.getType().name()));
     }
 
 
     @Test
-    void testPostCreateProduct() throws Exception {
+    @Order(3)
+    @DisplayName("testCreateProductApi_whenValidData_thenExpectedResponseIsCreated")
+    void testCreateProduct() throws Exception {
         ProductDTO americano = new ProductDTO();
         americano.setType("DRINK");
         americano.setName("Americano");
@@ -125,7 +143,9 @@ class ProductControllerTest extends TestDataInitializer {
 
 
     @Test
-    void testPutEditProduct() throws Exception {
+    @Order(4)
+    @DisplayName("testUpdateProductApi_whenValidData_thenExpectedReturnIsOk")
+    void testUpdateProduct() throws Exception {
 
         ProductDTO blackCoffeeUpdate = new ProductDTO();
         blackCoffeeUpdate.setPrice(8.0);
@@ -141,6 +161,8 @@ class ProductControllerTest extends TestDataInitializer {
     }
 
     @Test
+    @Order(5)
+    @DisplayName("testDeleteProductApi_whenValidData_thenExpectedReturnIsOk")
     void testDeleteProduct() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
                         .delete("/api/v1/products/admin/" + milk.getId() + "/delete/")

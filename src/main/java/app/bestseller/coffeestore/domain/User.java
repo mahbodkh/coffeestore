@@ -8,13 +8,12 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.util.Date;
+import java.time.Instant;
 
-/**
- * Created by Abe with ❤️.
- */
 
-@Data
+@Getter
+@Setter
+@ToString
 @Table(name = "bs_users")
 @NoArgsConstructor
 @AllArgsConstructor
@@ -29,8 +28,8 @@ public class User {
     private String username;
     @Column(name = "created")
     @CreationTimestamp
-    private Date created;
+    private Instant created;
     @Column(name = "changed")
     @UpdateTimestamp
-    private Date changed;
+    private Instant changed;
 }

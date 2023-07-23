@@ -16,10 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.function.ToDoubleFunction;
 
-/**
- * Created by Abe with ❤️.
- */
-
 
 @Slf4j
 @Service
@@ -39,7 +35,6 @@ public class OrderService {
      * @param requestOrderDtos the customer orders.
      * @return OrderResponseDto.
      */
-    @Transactional
     public OrderResponseDTO createOrder(Long userId, List<OrderDTO> requestOrderDtos) {
         log.info(" ==> try to register customer order.");
         var userEntity = userService.loadUser(userId);
@@ -66,7 +61,7 @@ public class OrderService {
         // discount applier
         final var discount = discountService.applyAsDouble(productOrders);
 
-        // Prepare into the Data Model.
+        // Prepare into a Data Model.
         final var orderEntity = orderMapper.mergeToOrderEntity(user, discount, productOrders);
         log.info(" Prepare customer orders: {} ", orderEntity);
 

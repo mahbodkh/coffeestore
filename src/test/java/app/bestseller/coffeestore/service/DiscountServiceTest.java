@@ -3,7 +3,9 @@ package app.bestseller.coffeestore.service;
 import app.bestseller.coffeestore.TestDataInitializer;
 import app.bestseller.coffeestore.domain.Product;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Order;
 import org.mockito.InjectMocks;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -14,11 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-
-
-/**
- * Created by Abe with ❤️.
- */
 
 
 @SpringBootTest
@@ -37,8 +34,10 @@ class DiscountServiceTest extends TestDataInitializer {
     public void setup() throws Exception {
         super.setUp();
 
+        // prepare some products ( drink )
         blackCoffee = getBlackCoffee();
         mocha = getMocha();
+        // prepare some products ( topping )
         milk = getMilk();
         tea = getTea();
         chocolateSauce = getChocolateSauce();
@@ -52,6 +51,8 @@ class DiscountServiceTest extends TestDataInitializer {
      * milk = 2€
      */
     @Test
+    @Order(1)
+    @DisplayName("testDiscount_whenTotalAmountIsLessThanPromotionRules_thenExpectedReturnZeroDiscount")
     void testDiscount_whenTotalCostDoesNotExceedLimit() {
         // given
         List<Product> products = new ArrayList<>(List.of(blackCoffee, milk));
@@ -68,6 +69,8 @@ class DiscountServiceTest extends TestDataInitializer {
      * chocolateSauce = 5€
      */
     @Test
+    @Order(2)
+    @DisplayName("testDiscount_whenTotalAmountAppliesTwentyFivePercentagePromotionRule_thenExpectedReturnDiscountByTwentyFivePromotion")
     void testDiscountWhenTotalCostExceedsLimitButNoDrinkLimit() {
         // given
         List<Product> products = new ArrayList<>(List.of(blackCoffee, mocha, chocolateSauce));
@@ -85,6 +88,8 @@ class DiscountServiceTest extends TestDataInitializer {
      * total drinks >= 3 { blackCoffee, mocha, tea }
      */
     @Test
+    @Order(3)
+    @DisplayName("testDiscount_whenTotalAmountAppliesAllPromotionRules_thenExpectedReturnLowestToppingAmountDiscount")
     void testDiscount_whenEligibleForBothPromotions_expectedApplyLowestDiscountRate() {
         // given
         List<Product> products = new ArrayList<>(List.of(blackCoffee, mocha, tea, chocolateSauce, milk));
@@ -101,6 +106,8 @@ class DiscountServiceTest extends TestDataInitializer {
      * tea = 3€
      */
     @Test
+    @Order(4)
+    @DisplayName("testDiscount_whenTotalAmountIsLessThanPromotionRules_thenExpectedReturnLowestAmountDiscount")
     void testDiscountWhenDrinkLimitExceeds() {
         // given
         List<Product> products = new ArrayList<>(List.of(blackCoffee, mocha, chocolateSauce, tea));
@@ -115,6 +122,8 @@ class DiscountServiceTest extends TestDataInitializer {
      * No products in the cart, so no discount should be applied
      */
     @Test
+    @Order(5)
+    @DisplayName("testDiscount_whenTotalAmountIsLessThanPromotionRules_thenExpectedReturnZeroDiscount")
     void testDiscountWhenCartIsEmpty() {
         // given
         List<Product> products = new ArrayList<>();
@@ -134,6 +143,8 @@ class DiscountServiceTest extends TestDataInitializer {
      * Milk is the cheapest drink, but is not more than 12 euros.
      */
     @Test
+    @Order(4)
+    @DisplayName("testDiscount_whenTotalAmountIsLessThanPromotionRules_thenExpectedReturnZeroDiscount")
     void testDiscount_whenTotalCostIsEqualTwelve_expectedReturnZero() {
         // given
         List<Product> products = new ArrayList<>(List.of(blackCoffee, mocha, milk));
